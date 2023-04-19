@@ -64,7 +64,7 @@
     <div id="myModal" class="modal">
 
       <!-- Modal content -->
-      <div class="modal-content">
+      <!-- <div class="modal-content">
         <h1 style="text-align: center;">Use Resource Limiting? </h1>
         <p>This demo has the ability to restrict the amount of GPU resources that are used on the client at a given
           time. If resource limiting is enabled, data for the Boeing 777 will begin streaming in as normal, however if
@@ -76,7 +76,7 @@
           <button onclick="dontUseResourceLimit()" style="margin-left: .2rem;margin-right: .2rem;">No</button>
         </div>
 
-      </div>
+      </div> -->
 
     </div>
     <div class="dropdown">
@@ -743,7 +743,7 @@
       }
     });
     $.notify(
-      `30GB Catia Assembly\n 700,000 parts\n 350 million triangles \n ${resourceLimitEnabled}`,
+      `Rendered with NVIDIA Tesla T4\ngraphics card on the server.\n30GB Catia Assembly\n with 700,000 parts\n and 350 million triangles`,
       {
         globalPosition: "top left",
         className: 'info',
@@ -754,7 +754,7 @@
   window.sendNotification = sendNotification;
 </script>
 
-<script>
+<!-- <script>
   function getUrlParameter(sParam) {
     var sPageURL = window.location.search.substring(1),
       sURLVariables = sPageURL.split('&'),
@@ -771,120 +771,121 @@
     return false;
   }
   window.getUrlParameter = getUrlParameter;
-</script>
+</script> -->
 
 <script>
-  if (!getUrlParameter("resourceLimit")) {
-    // Get the modal
-    var modal = document.getElementById("myModal");
+  // if (!getUrlParameter("resourceLimit")) {
+  //   // Get the modal
+  //   var modal = document.getElementById("myModal");
 
-    // Get the button that opens the modal
-    var btn = document.getElementById("myBtn");
+  //   // Get the button that opens the modal
+  //   var btn = document.getElementById("myBtn");
 
-    //create popup on load
-    window.addEventListener('load', (event) => {
-      modal.style.display = "block";
-    });
+  //   //create popup on load
+  //   window.addEventListener('load', (event) => {
+  //     modal.style.display = "block";
+  //   });
 
-    function useResourceLimit() {
-      modal.style.display = "none";
-      runThis(150);
-      sendNotification("Resource Limit: 150MB");
-    }
+  //   function useResourceLimit() {
+  //     modal.style.display = "none";
+  //     runThis(150);
+  //     sendNotification("Resource Limit: 150MB");
+  //   }
 
-    function dontUseResourceLimit() {
-      modal.style.display = "none";
-      runThis(0);
-      sendNotification("");
-    }
-  }
-  else if (getUrlParameter("resourceLimit") == "false") {
-    runThis(0);
-    sendNotification("");
-  }
-  else if (getUrlParameter("resourceLimit") == "true") {
-    runThis(150);
-    sendNotification("Resource Limit: 150MB");
-  }
+  //   function dontUseResourceLimit() {
+  //     modal.style.display = "none";
+  //     runThis(0);
+  //     sendNotification("");
+  //   }
+  // }
+  // else if (getUrlParameter("resourceLimit") == "false") {
+  // runThis(0);
+  // sendNotification("");
+  // }
+  // else if (getUrlParameter("resourceLimit") == "true") {
+  //   runThis(150);
+  //   sendNotification("Resource Limit: 150MB");
+  // }
 
 </script>
 
 <script type="module">
   // import { getContainerEndpoint } from '/javascripts/common/get_endpoint.js';
-  async function runThis(resourceLimit) {
-    // getContainerEndpoint().then((data) => {
-    //   if (data == 'error: 429 - Too many requests') {
-    //     window.location.replace("/error/too-many-requests");
-    //   }
+  // var resourceLimit = 0
+  // async function runThis(resourceLimit) {
+  // getContainerEndpoint().then((data) => {
+  //   if (data == 'error: 429 - Too many requests') {
+  //     window.location.replace("/error/too-many-requests");
+  //   }
+  sendNotification("");
+  hwv = await startViewer()
 
-    hwv = await startViewer()
+  hwv.setCallbacks({
+    sceneReady: function (camera) {
+      $(".dropdown").css('display', 'inline-block');
 
-    hwv.setCallbacks({
-      sceneReady: function (camera) {
-        $(".dropdown").css('display', 'inline-block');
+      $("#modelBrowserWindow").css("visibility", "hidden");
+      $("#modelBrowserWindow").css("opacity", "0");
 
-        $("#modelBrowserWindow").css("visibility", "hidden");
-        $("#modelBrowserWindow").css("opacity", "0");
+      hwv.getView().setBackgroundColor(new Communicator.Color(255, 255, 255), new Communicator.Color(255, 255, 255));
+      hwv.getSelectionManager().setHighlightLineElementSelection(false);
+      hwv.getSelectionManager().setHighlightFaceElementSelection(false);
+      hwv.getSelectionManager().setSelectParentIfSelected(false);
+      hwv.getView().setAmbientOcclusionEnabled(true);
+      hwv.getView().setAmbientOcclusionRadius(.02);
+      hwv.getView().setAntiAliasingMode(Communicator.AntiAliasingMode.SMAA);
+      var orbitOperator = hwv.operatorManager.getOperator(Communicator.OperatorId.Orbit);
+      orbitOperator.setOrbitFallbackMode(Communicator.OrbitFallbackMode.CameraTarget);
+      document.getElementById('explode-button').style.pointerEvents = 'none'
+      document.getElementById('cuttingplane-button').style.pointerEvents = 'none'
+      document.getElementById('measure-angle-between-faces').style.pointerEvents = 'none'
+      document.getElementById('measure-distance-between-faces').style.pointerEvents = 'none'
+      document.getElementById('measure-edges').style.pointerEvents = 'none'
+      document.getElementById('measure-point-to-point').style.pointerEvents = 'none'
+      document.getElementById('note-button').style.pointerEvents = 'none'
 
-        hwv.getView().setBackgroundColor(new Communicator.Color(255, 255, 255), new Communicator.Color(255, 255, 255));
-        hwv.getSelectionManager().setHighlightLineElementSelection(false);
-        hwv.getSelectionManager().setHighlightFaceElementSelection(false);
-        hwv.getSelectionManager().setSelectParentIfSelected(false);
-        hwv.getView().setAmbientOcclusionEnabled(true);
-        hwv.getView().setAmbientOcclusionRadius(.02);
-        hwv.getView().setAntiAliasingMode(Communicator.AntiAliasingMode.SMAA);
-        var orbitOperator = hwv.operatorManager.getOperator(Communicator.OperatorId.Orbit);
-        orbitOperator.setOrbitFallbackMode(Communicator.OrbitFallbackMode.CameraTarget);
-        document.getElementById('explode-button').style.pointerEvents = 'none'
-        document.getElementById('cuttingplane-button').style.pointerEvents = 'none'
-        document.getElementById('measure-angle-between-faces').style.pointerEvents = 'none'
-        document.getElementById('measure-distance-between-faces').style.pointerEvents = 'none'
-        document.getElementById('measure-edges').style.pointerEvents = 'none'
-        document.getElementById('measure-point-to-point').style.pointerEvents = 'none'
-        document.getElementById('note-button').style.pointerEvents = 'none'
-
-        document.getElementById('measure-angle-between-faces').style.opacity = 0.5
-        document.getElementById('measure-distance-between-faces').style.opacity = 0.5
-        document.getElementById('measure-edges').style.opacity = 0.5
-        document.getElementById('measure-point-to-point').style.opacity = 0.5
-        document.getElementById('note-button').style.opacity = 0.5
-        document.getElementById('cuttingplane-button').style.opacity = 0.5
-        document.getElementById('explode-button').style.opacity = 0.5
-      },
-      modelStructureReady: function () {
-        hwv.getView().getNavCube().disable();
-        hwv.getView().getAxisTriad().disable();
-        document.getElementById('explode-button').style.pointerEvents = 'auto'
-        document.getElementById('cuttingplane-button').style.pointerEvents = 'auto'
-        document.getElementById('cuttingplane-button').style.opacity = 1
-        document.getElementById('explode-button').style.opacity = 1
-      },
-      camera: function (camera) {
-        if (hwv.getOperatorManager().indexOf(Communicator.OperatorId.WalkMode) == 0) {
-          let walkoperator = hwv.operatorManager.getOperator(Communicator.OperatorId.Walk);
-          walkoperator.setViewAngle(70)
-        }
-        else {
-          let walkoperator = hwv.operatorManager.getOperator(Communicator.OperatorId.Walk);
-          walkoperator.setViewAngle(90)
-        }
+      document.getElementById('measure-angle-between-faces').style.opacity = 0.5
+      document.getElementById('measure-distance-between-faces').style.opacity = 0.5
+      document.getElementById('measure-edges').style.opacity = 0.5
+      document.getElementById('measure-point-to-point').style.opacity = 0.5
+      document.getElementById('note-button').style.opacity = 0.5
+      document.getElementById('cuttingplane-button').style.opacity = 0.5
+      document.getElementById('explode-button').style.opacity = 0.5
+    },
+    modelStructureReady: function () {
+      hwv.getView().getNavCube().disable();
+      hwv.getView().getAxisTriad().disable();
+      document.getElementById('explode-button').style.pointerEvents = 'auto'
+      document.getElementById('cuttingplane-button').style.pointerEvents = 'auto'
+      document.getElementById('cuttingplane-button').style.opacity = 1
+      document.getElementById('explode-button').style.opacity = 1
+    },
+    camera: function (camera) {
+      if (hwv.getOperatorManager().indexOf(Communicator.OperatorId.WalkMode) == 0) {
+        let walkoperator = hwv.operatorManager.getOperator(Communicator.OperatorId.Walk);
+        walkoperator.setViewAngle(70)
       }
+      else {
+        let walkoperator = hwv.operatorManager.getOperator(Communicator.OperatorId.Walk);
+        walkoperator.setViewAngle(90)
+      }
+    }
 
-    });
+  });
 
-    const uiConfig = {
-      containerId: "content",
-      screenConfiguration: Sample.screenConfiguration,
-    };
+  const uiConfig = {
+    containerId: "content",
+    screenConfiguration: Sample.screenConfiguration,
+  };
 
-    const ui = new Communicator.Ui.Desktop.DesktopUi(hwv, uiConfig);
+  const ui = new Communicator.Ui.Desktop.DesktopUi(hwv, uiConfig);
 
-    // hwv.start();
+  // hwv.start();
 
-    window.onresize = function () { hwv.resizeCanvas(); };
+  window.onresize = function () { hwv.resizeCanvas(); };
     // });
-  }
-  window.runThis = runThis;
+  // }
+  // window.runThis = runThis;
 </script>
 
 <style>
