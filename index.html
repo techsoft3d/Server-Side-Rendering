@@ -1,14 +1,11 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
-  <title>
-    Server Side Rendering | HOOPS Web Viewer
-  </title>
-  <meta charset="utf-8" />
+  <title>Server Side Rendering | HOOPS Web Viewer</title>
+  <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="chrome=1;IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
+  <meta name="viewport" content="user-scalable=no" />
   <!-- Google Tag Manager -->
   <script>(function (w, d, s, l, i) {
       w[l] = w[l] || []; w[l].push({
@@ -19,15 +16,17 @@
           'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
     })(window, document, 'script', 'dataLayer', 'GTM-PB9P4KS');</script>
   <!-- End Google Tag Manager -->
+
   <link rel="stylesheet" href="stylesheets/TreeControl.css" />
   <link rel="stylesheet" href="stylesheets/Toolbar.css" />
   <link rel="stylesheet" href="stylesheets/Common.css" />
   <link rel="stylesheet" href="stylesheets/Desktop.css" />
-  <link rel="stylesheet" href="stylesheets/jquery-ui.min.css" />
+  <link rel="stylesheet" href="stylesheets/NoteText.css" />
   <link rel="stylesheet" href="stylesheets/PropertyWindow.css" />
   <link rel="stylesheet" href="stylesheets/ViewerSettings.css" />
   <link rel="stylesheet" href="stylesheets/jquery.minicolors.css" />
-  <link rel="stylesheet" href="stylesheets/cssplay.css" />
+  <link rel="stylesheet" href="stylesheets/jquery-ui.min.css" />
+  <link rel="stylesheet" href="stylesheets/demos-common.css" />
   <link rel="stylesheet" href="stylesheets/drop-down.css" />
 
   <script type="text/javascript" src="javascripts/communicator_scripts/jquery-3.3.1.min.js"></script>
@@ -47,11 +46,106 @@
   <script type="text/javascript" src="javascripts/conversionService.js"></script>
 
 
-
   <script>
     var hwv = null;
   </script>
 
+  <style>
+    #citation {
+      position: fixed;
+      bottom: 5px;
+      right: 5px;
+      font-size: 10px;
+      color: #777;
+    }
+  </style>
+
+  <script>
+    function sendNotification(resourceLimitEnabled) {
+      $.notify.addStyle('mystyle', {
+        html: "<div><span data-notify-text/></div>",
+        classes: {
+          base: {
+            "white-space": "nowrap",
+            "background-color": "#0090d0",
+            "padding": "5px",
+            'color': 'white',
+            'box-shadow': "rgba(0, 0, 0, 0.35) 0px 5px 15px",
+            'border-radius': "25px",
+            'padding': "15px"
+          }
+        }
+      });
+      $.notify(
+        `Rendered with NVIDIA Tesla T4\ngraphics card on the server.\n30GB Catia Assembly\n with 700,000 parts\n and 350 million triangles`,
+        {
+          globalPosition: "bottom left",
+          className: 'info',
+          style: 'mystyle',
+          autoHide: false
+        });
+    }
+    window.sendNotification = sendNotification;
+  </script>
+
+  <script type="module">
+    sendNotification("");
+    hwv = await startViewer()
+
+    hwv.setCallbacks({
+      sceneReady: function (camera) {
+        $(".dropdown").css('display', 'inline-block');
+        snapToView(0)
+        hwv.getView().setBackgroundColor(new Communicator.Color(255, 255, 255), new Communicator.Color(255, 255, 255));
+        hwv.getSelectionManager().setHighlightLineElementSelection(false);
+        hwv.getSelectionManager().setHighlightFaceElementSelection(false);
+        hwv.getSelectionManager().setSelectParentIfSelected(false);
+        hwv.getView().setAmbientOcclusionEnabled(true);
+        hwv.getView().setAmbientOcclusionRadius(.02);
+        hwv.getView().setAntiAliasingMode(Communicator.AntiAliasingMode.SMAA);
+        var orbitOperator = hwv.operatorManager.getOperator(Communicator.OperatorId.Orbit);
+        orbitOperator.setOrbitFallbackMode(Communicator.OrbitFallbackMode.CameraTarget);
+        document.getElementById('explode-button').style.pointerEvents = 'none'
+        document.getElementById('cuttingplane-button').style.pointerEvents = 'none'
+        document.getElementById('measure-angle-between-faces').style.pointerEvents = 'none'
+        document.getElementById('measure-distance-between-faces').style.pointerEvents = 'none'
+        document.getElementById('measure-edges').style.pointerEvents = 'none'
+        document.getElementById('measure-point-to-point').style.pointerEvents = 'none'
+        document.getElementById('note-button').style.pointerEvents = 'none'
+
+        document.getElementById('measure-angle-between-faces').style.opacity = 0.5
+        document.getElementById('measure-distance-between-faces').style.opacity = 0.5
+        document.getElementById('measure-edges').style.opacity = 0.5
+        document.getElementById('measure-point-to-point').style.opacity = 0.5
+        document.getElementById('note-button').style.opacity = 0.5
+        document.getElementById('cuttingplane-button').style.opacity = 0.5
+        document.getElementById('explode-button').style.opacity = 0.5
+      },
+      modelStructureReady: function () {
+        hwv.getView().getNavCube().disable();
+        hwv.getView().getAxisTriad().disable();
+        document.getElementById('explode-button').style.pointerEvents = 'auto'
+        document.getElementById('cuttingplane-button').style.pointerEvents = 'auto'
+        document.getElementById('cuttingplane-button').style.opacity = 1
+        document.getElementById('explode-button').style.opacity = 1
+      },
+      walkOperatorActivated: function () {
+        var keyboardWalkOperator = hwv.operatorManager.getOperator(Communicator.OperatorId.WalkMode);
+        keyboardWalkOperator.setWalkSpeed(7000);
+      }
+
+    });
+
+    const uiConfig = {
+      containerId: "content",
+      screenConfiguration: Sample.screenConfiguration,
+    };
+
+    const ui = new Communicator.Ui.Desktop.DesktopUi(hwv, uiConfig);
+
+
+    window.onresize = function () { hwv.resizeCanvas(); };
+  </script>
 </head>
 
 <body>
@@ -60,10 +154,6 @@
       style="display:none;visibility:hidden"></iframe></noscript>
   <!-- End Google Tag Manager (noscript) -->
   <div id="content">
-    <div id="viewerContainer"></div>
-    <div id="myModal" class="modal">
-
-    </div>
     <div class="dropdown">
       <button class="drop-button" id="views_btn">Views</button>
       <div class="dropdown-content">
@@ -83,10 +173,9 @@
           <img src="stylesheets/images/stairs.png" />
           <div class="dropdown-text">Stairs</div>
         </a>
-
-
       </div>
     </div>
+    <div id="viewerContainer"></div>
     <!-- Toolbar HTML-->
     <div id="toolBar">
       <div class="toolbar-tools">
@@ -707,131 +796,8 @@
         </div>
       </div>
     </div>
+    <div id="citation"></div>
   </div>
 </body>
-
-<script>
-  function sendNotification(resourceLimitEnabled) {
-    $.notify.addStyle('mystyle', {
-      html: "<div><span data-notify-text/></div>",
-      classes: {
-        base: {
-          "white-space": "nowrap",
-          "background-color": "#0090d0",
-          "padding": "5px",
-          'color': 'white',
-          'box-shadow': "rgba(0, 0, 0, 0.35) 0px 5px 15px",
-          'border-radius': "25px",
-          'padding': "15px"
-        }
-      }
-    });
-    $.notify(
-      `Rendered with NVIDIA Tesla T4\ngraphics card on the server.\n30GB Catia Assembly\n with 700,000 parts\n and 350 million triangles`,
-      {
-        globalPosition: "bottom left",
-        className: 'info',
-        style: 'mystyle',
-        autoHide: false
-      });
-  }
-  window.sendNotification = sendNotification;
-</script>
-
-
-<script type="module">
-  sendNotification("");
-  hwv = await startViewer()
-
-  hwv.setCallbacks({
-    sceneReady: function (camera) {
-      $(".dropdown").css('display', 'inline-block');
-      snapToView(0)
-      hwv.getView().setBackgroundColor(new Communicator.Color(255, 255, 255), new Communicator.Color(255, 255, 255));
-      hwv.getSelectionManager().setHighlightLineElementSelection(false);
-      hwv.getSelectionManager().setHighlightFaceElementSelection(false);
-      hwv.getSelectionManager().setSelectParentIfSelected(false);
-      hwv.getView().setAmbientOcclusionEnabled(true);
-      hwv.getView().setAmbientOcclusionRadius(.02);
-      hwv.getView().setAntiAliasingMode(Communicator.AntiAliasingMode.SMAA);
-      var orbitOperator = hwv.operatorManager.getOperator(Communicator.OperatorId.Orbit);
-      orbitOperator.setOrbitFallbackMode(Communicator.OrbitFallbackMode.CameraTarget);
-      document.getElementById('explode-button').style.pointerEvents = 'none'
-      document.getElementById('cuttingplane-button').style.pointerEvents = 'none'
-      document.getElementById('measure-angle-between-faces').style.pointerEvents = 'none'
-      document.getElementById('measure-distance-between-faces').style.pointerEvents = 'none'
-      document.getElementById('measure-edges').style.pointerEvents = 'none'
-      document.getElementById('measure-point-to-point').style.pointerEvents = 'none'
-      document.getElementById('note-button').style.pointerEvents = 'none'
-
-      document.getElementById('measure-angle-between-faces').style.opacity = 0.5
-      document.getElementById('measure-distance-between-faces').style.opacity = 0.5
-      document.getElementById('measure-edges').style.opacity = 0.5
-      document.getElementById('measure-point-to-point').style.opacity = 0.5
-      document.getElementById('note-button').style.opacity = 0.5
-      document.getElementById('cuttingplane-button').style.opacity = 0.5
-      document.getElementById('explode-button').style.opacity = 0.5
-    },
-    modelStructureReady: function () {
-      hwv.getView().getNavCube().disable();
-      hwv.getView().getAxisTriad().disable();
-      document.getElementById('explode-button').style.pointerEvents = 'auto'
-      document.getElementById('cuttingplane-button').style.pointerEvents = 'auto'
-      document.getElementById('cuttingplane-button').style.opacity = 1
-      document.getElementById('explode-button').style.opacity = 1
-    },
-    walkOperatorActivated: function () {
-      var keyboardWalkOperator = hwv.operatorManager.getOperator(Communicator.OperatorId.WalkMode);
-      keyboardWalkOperator.setWalkSpeed(7000);
-    }
-
-  });
-
-  const uiConfig = {
-    containerId: "content",
-    screenConfiguration: Sample.screenConfiguration,
-  };
-
-  const ui = new Communicator.Ui.Desktop.DesktopUi(hwv, uiConfig);
-
-
-  window.onresize = function () { hwv.resizeCanvas(); };
-
-</script>
-
-<style>
-  /* The Modal (background) */
-  .modal {
-    display: none;
-    /* Hidden by default */
-    position: fixed;
-    /* Stay in place */
-    z-index: 1;
-    /* Sit on top */
-    padding-top: 100px;
-    /* Location of the box */
-    left: 0;
-    top: 0;
-    width: 100%;
-    /* Full width */
-    height: 100%;
-    /* Full height */
-    overflow: auto;
-    /* Enable scroll if needed */
-    background-color: rgb(0, 0, 0);
-    /* Fallback color */
-    background-color: rgba(0, 0, 0, 0.4);
-    /* Black w/ opacity */
-  }
-
-  /* Modal Content */
-  .modal-content {
-    background-color: #fefefe;
-    margin: auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 50%;
-  }
-</style>
 
 </html>
