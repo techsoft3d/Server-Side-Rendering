@@ -1,5 +1,5 @@
 modelUIDs = [
-       "3804b00f-8197-4ac0-be9b-61fef7bbc914" //boeing full
+       "8d16fab3-279b-4b7c-8730-50964897de3a" //boeing full
 ]
 
 async function startViewer() {
@@ -20,7 +20,7 @@ async function startViewer() {
         viewer = new Communicator.WebViewer({
                 containerId: "viewerContainer",
                 endpointUri: endpointUriBeginning + data.serverurl + ":" + data.port + '?token=' + data.sessionid,
-                model: "boeing-full",
+                model: "Hospital.ifc",
                 // streamingMode: Communicator.StreamingMode.OnDemand,
                 boundingPreviewMode: Communicator.BoundingPreviewMode.All,
                 rendererType: Communicator.RendererType.Server
