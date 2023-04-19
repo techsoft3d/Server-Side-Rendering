@@ -1,124 +1,125 @@
 cameras = [
-    // Turbine View
+    //home view 
     {
         "position": {
-            "x": -557.4823445279757,
-            "y": -298.0021919652274,
-            "z": 116.76314287683842
+            "x": -36804.90524878874,
+            "y": 71266.17035594565,
+            "z": 34749.36808953367
         },
         "target": {
-            "x": -1008.6983283399313,
-            "y": -390.92146169880994,
-            "z": 121.7554541108642
+            "x": 41109.81923776456,
+            "y": 102745.76085618719,
+            "z": 16887.44670812786
         },
         "up": {
-            "x": -0.006081622681869791,
-            "y": 0.08307305738293867,
-            "z": 0.9965249023494629
+            "x": 0.1927723563675583,
+            "y": 0.07788508370153654,
+            "z": 0.9781476025413056
         },
-        "width": 150,
-        "height": 150,
-        "projection": 1,
-        "nearLimit": 0.001,
+        "width": 85911.09813950275,
+        "height": 85911.09813950275,
+        "projection": 0,
+        "nearLimit": 0.01,
         "className": "Communicator.Camera"
     },
-    // Cockpit View
+    //outside view 
     {
         "position": {
-            "x": -223.86221656029636,
-            "y": -0.20765410480520197,
-            "z": 250
+            "x": 89262.78412481527,
+            "y": 78387.73229727754,
+            "z": 33430.05795618719
         },
         "target": {
-            "x": -23.905891117051283,
-            "y": 3.5912059178083773,
-            "z": 248.25742209251646
+            "x": 84513.10618204686,
+            "y": 82943.36922963831,
+            "z": 31045.37106259091
         },
         "up": {
-            "x": 0.008711317543164628,
-            "y": 0.00016550152082292328,
-            "z": 0.9999620420575517
+            "x": -0.24585950854704797,
+            "y": 0.23581528491091033,
+            "z": 0.9401830957102931
         },
-        "width": 140.04150764194193,
-        "height": 140.04150764194193,
+        "width": 7000.000000000002,
+        "height": 7000.000000000002,
         "projection": 1,
-        "nearLimit": 0.001,
+        "nearLimit": 0.01,
         "className": "Communicator.Camera"
     },
-    // Cabin View
+    //hvac 
     {
         "position": {
-            "x": -1655,
-            "y": 0,
-            "z": 265
+            "x": 53115.762261652315,
+            "y": 124239.69816180327,
+            "z": 29017.93597081994
         },
         "target": {
-            "x": -1455,
-            "y": 0,
-            "z": 265
+            "x": 59298.521005472765,
+            "y": 121263.392897729,
+            "z": 27634.06412315644
         },
         "up": {
-            "x": 0,
-            "y": 0,
-            "z": 1
+            "x": 0.1781309214844992,
+            "y": -0.08575007068464574,
+            "z": 0.9802633830704182
         },
-        "width": 140.04150764194193,
-        "height": 140.04150764194193,
+        "width": 7000,
+        "height": 7000,
         "projection": 1,
-        "nearLimit": 0.001,
+        "nearLimit": 0.01,
         "className": "Communicator.Camera"
     },
-    // Left Side of Fuselage
-    {
-        "position": {
-            "x": -64.74109202950604,
-            "y": -202.95569930068473,
-            "z": 265.5353521659888
-        },
-        "target": {
-            "x": -398.1445744151109,
-            "y": -81.81013297601862,
-            "z": 175.15585398257514
-        },
-        "up": {
-            "x": -0.2316563888867041,
-            "y": 0.08540495960043444,
-            "z": 0.9690414389300492
-        },
-        "width": 366.063633810924,
-        "height": 366.063633810924,
-        "projection": 1,
-        "nearLimit": 0.001,
-        "className": "Communicator.Camera"
+    
+
+//stairs
+{
+    "position": {
+        "x": 34411.08731354417,
+        "y": 94106.42177294883,
+        "z": 8956.4303670191
     },
-    // Undercarriage 
-    {
-        "position": {
-            "x": -1139.6303676798295,
-            "y": -259.3675122439149,
-            "z": 64.09176927056416
-        },
-        "target": {
-            "x": -1298.708881694242,
-            "y": -142.08134796174028,
-            "z": 33.465276703814865
-        },
-        "up": {
-            "x": -0.12325412281054916,
-            "y": 0.09087338655365913,
-            "z": 0.9882056713187145
-        },
-        "width": 199.99999999999994,
-        "height": 199.99999999999994,
-        "projection": 1,
-        "nearLimit": 0.001,
-        "className": "Communicator.Camera"
-    }
+    "target": {
+        "x": 38417.36992389011,
+        "y": 99728.83251181974,
+        "z": 7799.625660308086
+    },
+    "up": {
+        "x": 0.09589994450791678,
+        "y": 0.13458583187966294,
+        "z": 0.986250401521154
+    },
+    "width": 6999.9999999999945,
+    "height": 6999.9999999999945,
+    "projection": 1,
+    "nearLimit": 0.01,
+    "className": "Communicator.Camera"
+},
 ];
 
 function setView(val) {
+    var camera = Communicator.Camera.construct(cameras[val]);
+    hwv.getView().setCamera(camera, 500);
+
+    if (val == 0) {
+        hwv.operatorManager.set(Communicator.OperatorId.Navigate, 0);
+    }
+    else {
+        hwv.operatorManager.set(Communicator.OperatorId.Navigate, 0);
+        enableWalk();
+    }
+
+}
+
+function snapToView(val) {
     if (val >= 0) {
         var camera = Communicator.Camera.construct(cameras[val]);
-        hwv.getView().setCamera(camera, 500);
+        hwv.getView().setCamera(camera, 500); // about as fast as this can go
     }
+}
+
+function enableWalk() {
+
+    var walkModeOperator = hwv.operatorManager.getOperator(Communicator.OperatorId.WalkMode);
+    var walkMode = 0;
+    walkModeOperator.setWalkMode(walkMode);
+    hwv.operatorManager.set(Communicator.OperatorId.WalkMode, 0);
 }
