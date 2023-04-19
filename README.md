@@ -1,6 +1,6 @@
-# Hoops Web Platform - Boeing Demo
+# Hoops Web Platform - Server Side Rendering Demo
 
-See this demo running live on [GitHub Pages](https://techsoft3d.github.io/2D-DWG-Drawing-Viewer/index.html?instance=HotelFloorplan).
+See this demo running live on [GitHub Pages](https://techsoft3d.github.io/Server-Side-Rendering/).
 
 ## In order to run locally
 
