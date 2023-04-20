@@ -121,7 +121,7 @@
           snapToView(0)
         }
         else if (model_name == "CementPlant") {
-          snapToView(4)
+          snapToView(0)
         }
         hwv.getView().setBackgroundColor(new Communicator.Color(255, 255, 255), new Communicator.Color(255, 255, 255));
         hwv.getSelectionManager().setHighlightLineElementSelection(false);
@@ -871,44 +871,28 @@
 
       document.getElementById("view0Src").src = "stylesheets/images/homeView.png"
       document.getElementById("view0Text").innerText = "Home View"
-      // document.getElementById("hrefID0").onmousedown = setView(0)
-      // document.getElementById("hrefID0").ontouchstart = setView(0)
 
       document.getElementById("view1Src").src = "stylesheets/images/outsideView.png"
       document.getElementById("view1Text").innerText = "Solar Panels"
-      // document.getElementById("hrefID1").onmousedown = setView(1)
-      // document.getElementById("hrefID1").ontouchstart = setView(1)
 
       document.getElementById("view2Src").src = "stylesheets/images/hvac.png"
       document.getElementById("view2Text").innerText = "HVAC"
-      // document.getElementById("hrefID2").onmousedown = setView(2)
-      // document.getElementById("hrefID2").ontouchstart = setView(2)
 
       document.getElementById("view3Src").src = "stylesheets/images/stairs.png"
       document.getElementById("view3Text").innerText = "Stairs"
-      // document.getElementById("hrefID3").onmousedown = setView(3)
-      // document.getElementById("hrefID3").ontouchstart = setView(3)
       break;
     case "CementPlant":
       document.getElementById("view0Src").src = "stylesheets/images/homeView.png"
       document.getElementById("view0Text").innerText = "Home View"
-      // document.getElementById("hrefID0").onmousedown = setView(4)
-      // document.getElementById("hrefID0").ontouchstart = setView(4)
 
       document.getElementById("view1Src").src = "stylesheets/images/outsideView.png"
       document.getElementById("view1Text").innerText = "Loading Area"
-      // document.getElementById("hrefID1").onmousedown = setView(5)
-      // document.getElementById("hrefID1").ontouchstart = setView(5)
 
       document.getElementById("view2Src").src = "stylesheets/images/hvac.png"
       document.getElementById("view2Text").innerText = "Preheater"
-      // document.getElementById("hrefID2").onmousedown = setView(6)
-      // document.getElementById("hrefID2").ontouchstart = setView(6)
 
       document.getElementById("view3Src").src = "stylesheets/images/stairs.png"
       document.getElementById("view3Text").innerText = "Raw Mill"
-      // document.getElementById("hrefID3").onmousedown = setView(7)
-      // document.getElementById("hrefID3").ontouchstart = setView(7)
       break;
     case "mr1718-arm":
       document.getElementById("views_btn").style.visibility = 'hidden'
