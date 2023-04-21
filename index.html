@@ -48,6 +48,7 @@
 
   <script>
     var hwv = null;
+    var model_name = Sample._getParameterByName("instance");
   </script>
 
   <style>
@@ -88,14 +89,40 @@
     window.sendNotification = sendNotification;
   </script>
 
+  <script>
+    function createCementPlant() {
+      // move to model structure ready
+      for (let i = 0; i < modelnames.length; i++) {
+        var modelnode = hwv.model.createNode("test");
+        hwv.model.loadSubtreeFromModel(modelnode, modelnames[i]);
+      }
+      for (let i = 0; i < modelnames2.length; i++) {
+        var modelnode = hwv.model.createNode("test");
+        var conf = new Communicator.LoadSubtreeConfig();
+        let matrix = new Communicator.Matrix();
+        matrix.setScaleComponent(25, 25, 25);
+        hwv.model.setNodeMatrix(modelnode, matrix);
+        conf.additonalMatrix = matrix;
+        hwv.model.loadSubtreeFromModel(modelnode, modelnames2[i], conf);
+      }
+    }
+  </script>
+
+
+
   <script type="module">
     sendNotification("");
-    hwv = await startViewer()
-
+    hwv = await startViewer(model_name)
+    // adjustUI()
     hwv.setCallbacks({
       sceneReady: function (camera) {
         $(".dropdown").css('display', 'inline-block');
-        snapToView(0)
+        if (model_name == 'Hospital') {
+          snapToView(0)
+        }
+        else if (model_name == "CementPlant") {
+          snapToView(0)
+        }
         hwv.getView().setBackgroundColor(new Communicator.Color(255, 255, 255), new Communicator.Color(255, 255, 255));
         hwv.getSelectionManager().setHighlightLineElementSelection(false);
         hwv.getSelectionManager().setHighlightFaceElementSelection(false);
@@ -128,6 +155,10 @@
         document.getElementById('cuttingplane-button').style.pointerEvents = 'auto'
         document.getElementById('cuttingplane-button').style.opacity = 1
         document.getElementById('explode-button').style.opacity = 1
+
+        if (model_name == 'CementPlant') {
+          loadCementPlant(hwv)
+        }
       },
       walkOperatorActivated: function () {
         var keyboardWalkOperator = hwv.operatorManager.getOperator(Communicator.OperatorId.WalkMode);
@@ -146,6 +177,8 @@
 
     window.onresize = function () { hwv.resizeCanvas(); };
   </script>
+
+
 </head>
 
 <body>
@@ -154,28 +187,59 @@
       style="display:none;visibility:hidden"></iframe></noscript>
   <!-- End Google Tag Manager (noscript) -->
   <div id="content">
+    <div id="viewerContainer"></div>
+    <div class="dropdown">
+      <button class="drop-button">Models</button>
+      <div class="dropdown-content">
+        <a href="/index.html?instance=Hospital" style="width: 90%; float: left">
+          <img src="stylesheets/images/homeView.png" alt="Landing Gear Main Shaft" style="float: left" />
+          <div class="dropdown-text" style="width: 50%; float: right">
+            Hospital
+          </div>
+        </a>
+
+        <a href="/index.html?instance=CementPlant" style="width: 90%; float: left">
+          <img src="stylesheets/images/cementplant.png" alt="Landing Gear Main Shaft" style="float: left" />
+          <div class="dropdown-text" style="width: 50%; float: right">
+            Cement Plant
+          </div>
+        </a>
+
+        <a href="/index.html?instance=mr1718-arm" style="width: 90%; float: left">
+          <img src="stylesheets/images/robotArm.png" alt="Landing Gear Main Shaft" style="float: left" />
+          <div class="dropdown-text" style="width: 50%; float: right">
+            Robot Arm
+          </div>
+        </a>
+
+      </div>
+    </div>
+
     <div class="dropdown">
       <button class="drop-button" id="views_btn">Views</button>
-      <div class="dropdown-content">
-        <a href="javascript:void(0);" onmousedown='setView(0)' ontouchstart='setView(0)'>
-          <img src="stylesheets/images/homeView.png" />
-          <div class="dropdown-text">Home View</div>
+      <div class="dropdown-content" id="views_dropdown">
+        <a id="hrefID0" href="javascript:void(0);" onmousedown='setView(0)' ontouchstart='setView(0)'>
+          <img id="view0Src" src="stylesheets/images/homeView.png" />
+          <div id="view0Text" class="dropdown-text">Home View</div>
         </a>
-        <a href="javascript:void(0);" onmousedown='setView(1)' ontouchstart='setView(1)'>
-          <img src="stylesheets/images/outsideView.png" />
-          <div class="dropdown-text">Solar Panels</div>
+
+        <a id="hrefID1" href="javascript:void(0);" onmousedown='setView(1)' ontouchstart='setView(1)'>
+          <img id="view1Src" src="stylesheets/images/outsideView.png" />
+          <div id="view1Text" class="dropdown-text">Solar Panels</div>
         </a>
-        <a href="javascript:void(0);" onmousedown='setView(2)' ontouchstart='setView(2)'>
-          <img src="stylesheets/images/hvac.png" />
-          <div class="dropdown-text">HVAC</div>
+
+        <a id="hrefID2" href="javascript:void(0);" onmousedown='setView(2)' ontouchstart='setView(2)'>
+          <img id="view2Src" src="stylesheets/images/hvac.png" />
+          <div id="view2Text" class="dropdown-text">HVAC</div>
         </a>
-        <a href="javascript:void(0);" onmousedown='setView(3)' ontouchstart='setView(0)'>
-          <img src="stylesheets/images/stairs.png" />
-          <div class="dropdown-text">Stairs</div>
+
+        <a id="hrefID3" href="javascript:void(0);" onmousedown='setView(3)' ontouchstart='setView(3)'>
+          <img id="view3Src" src="stylesheets/images/stairs.png" />
+          <div id="view3Text" class="dropdown-text">Stairs</div>
         </a>
       </div>
     </div>
-    <div id="viewerContainer"></div>
+
     <!-- Toolbar HTML-->
     <div id="toolBar">
       <div class="toolbar-tools">
@@ -799,5 +863,46 @@
     <div id="citation"></div>
   </div>
 </body>
+
+<script>
+  // function adjustUI() {
+  switch (model_name) {
+    case "Hospital":
+
+      document.getElementById("view0Src").src = "stylesheets/images/homeView.png"
+      document.getElementById("view0Text").innerText = "Home View"
+
+      document.getElementById("view1Src").src = "stylesheets/images/outsideView.png"
+      document.getElementById("view1Text").innerText = "Solar Panels"
+
+      document.getElementById("view2Src").src = "stylesheets/images/hvac.png"
+      document.getElementById("view2Text").innerText = "HVAC"
+
+      document.getElementById("view3Src").src = "stylesheets/images/stairs.png"
+      document.getElementById("view3Text").innerText = "Stairs"
+      break;
+    case "CementPlant":
+      document.getElementById("view0Src").src = "stylesheets/images/homeView.png"
+      document.getElementById("view0Text").innerText = "Home View"
+
+      document.getElementById("view1Src").src = "stylesheets/images/outsideView.png"
+      document.getElementById("view1Text").innerText = "Loading Area"
+
+      document.getElementById("view2Src").src = "stylesheets/images/hvac.png"
+      document.getElementById("view2Text").innerText = "Preheater"
+
+      document.getElementById("view3Src").src = "stylesheets/images/stairs.png"
+      document.getElementById("view3Text").innerText = "Raw Mill"
+      break;
+    case "mr1718-arm":
+      document.getElementById("views_btn").style.visibility = 'hidden'
+      document.getElementById("views_dropdown").style.visibility = 'hidden'
+
+      break;
+    default:
+      break;
+  }
+  // }
+</script>
 
 </html>
